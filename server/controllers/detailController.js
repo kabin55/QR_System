@@ -46,6 +46,7 @@ export const getDetail = async (req, res) => {
       { restaurantId },
       { loginCredentials: 0 }
     )
+    console.log(`From detail Controller ${detail}`)
     if (!detail) {
       return res.status(404).json({ message: 'Detail not found' })
     }
@@ -64,7 +65,7 @@ export const updateDetail = async (req, res) => {
       return res.status(400).json({ message: 'Restaurant ID is required' })
     }
 
-    const { restaurantName, address, description, image, username, password } =
+    const { restaurantName, address, description, image } =
       req.body
 
     // Build update object dynamically
@@ -74,14 +75,7 @@ export const updateDetail = async (req, res) => {
     if (description) updateFields.description = description
     if (image) updateFields.image = image
 
-    if (username || password) {
-      updateFields.loginCredentials = {}
-      if (username) updateFields.loginCredentials.username = username
-      if (password) {
-        updateFields.loginCredentials.password = await bcrypt.hash(password, 10)
-      }
-    }
-
+   
     const updatedDetail = await Detail.findOneAndUpdate(
       { restaurantId }, // match by restaurantId field in DB
       { $set: updateFields },

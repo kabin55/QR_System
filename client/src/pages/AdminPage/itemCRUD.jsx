@@ -4,7 +4,6 @@ import Navbar from '../../components/AdminComponent/NavBar'
 import { useItems } from '../../hooks/useItems.js'
 import ItemCard from '../../components/AdminComponent/ItemCard'
 import DeleteModal from '../../components/AdminComponent/DeleteModal'
-import Toast from '../../components/AdminComponent/Toast'
 import InputField from '../../components/AdminComponent/InputField'
 
 export default function ItemCRUD() {
@@ -12,7 +11,7 @@ export default function ItemCRUD() {
     localStorage.getItem('restaurantDetails')
   )?.restaurantId
 
-  const { items, loading, toast, setToast, saveItem, removeItem } = useItems(restaurantId)
+  const { items, loading, saveItem, removeItem } = useItems(restaurantId)
   const [previewItems, setPreviewItems] = useState([])
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -35,7 +34,6 @@ export default function ItemCRUD() {
     const rows = XLSX.utils.sheet_to_json(sheet)
 
     if (!rows.length) {
-      setToast({ message: 'File is empty', type: 'error' })
       return
     }
 
@@ -54,7 +52,6 @@ export default function ItemCRUD() {
     setPreviewItems(cleaned)
   } catch (err) {
     console.error(err)
-    setToast({ message: 'Invalid CSV / Excel file', type: 'error' })
   }
 
   e.target.value = ''
@@ -66,7 +63,6 @@ const uploadAllItems = async () => {
   )
 
   if (!validItems.length) {
-    setToast({ message: 'No valid items to upload', type: 'error' })
     return
   }
 
@@ -87,11 +83,7 @@ const uploadAllItems = async () => {
   setUploading(false)
   setPreviewItems([])
 
-  setToast({
-    message: `${validItems.length} items uploaded successfully`,
-    type: 'success',
-  })
-}
+ }
 
 
   const handleChange = (e) =>
@@ -100,7 +92,6 @@ const uploadAllItems = async () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!form.type || !form.item || !form.price) {
-      setToast({ message: 'All required fields missing', type: 'error' })
       return
     }
 
@@ -148,7 +139,31 @@ const uploadAllItems = async () => {
 
 
     <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
-            <InputField label="Type" name="type" value={form.type} onChange={handleChange} required />
+<InputField
+  label="Type"
+  name="type"
+  value={form.type}
+  onChange={handleChange}
+  required
+  type="select"
+  options={[
+    { value: "breakfast", label: "Breakfast" },
+    { value: "lunch", label: "Lunch" },
+    { value: "dinner", label: "Dinner" },
+    { value: "fast_food", label: "Fast Food" },
+    { value: "momo", label: "Momo" },
+    { value: "snacks", label: "Snacks" },
+    { value: "tea", label: "Tea" },
+    { value: "soft_drinks", label: "Soft Drinks" },
+    { value: "drinks", label: "Drinks" },
+    { value: "smoke", label: "Smoke" },
+    { value: "milkshake", label: "Milkshake" },
+    { value: "bakery", label: "Bakery" },
+    { value: "other", label: "Other" }
+  ]}
+/>
+
+
             <InputField label="Item" name="item" value={form.item} onChange={handleChange} required />
             <InputField label="Price" name="price" value={form.price} onChange={handleChange} required />
             <InputField label="Image URL" name="pic" value={form.pic} onChange={handleChange} />
@@ -215,20 +230,19 @@ const uploadAllItems = async () => {
         {loading ? (
           <p className="text-center">Loading...</p>
         ) : (
-          items.map((item) => (
-            <ItemCard
-              key={item._id}
-              item={item}
-              onEdit={() => handleEdit(item)}
-              onDelete={() => setDeleteItemId(item._id)}
-            />
-          ))
+          [...items].reverse().map((item) => (
+  <ItemCard
+    key={item._id}
+    item={item}
+    onEdit={() => handleEdit(item)}
+    onDelete={() => setDeleteItemId(item._id)}
+  />
+))
+
         )}
       </div>
 
-     {toast?.message && (
-  <Toast {...toast} onClose={() => setToast({ message: '', type: '' })} />
-)}
+    
 
 
       <DeleteModal

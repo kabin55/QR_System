@@ -21,3 +21,4 @@ router.patch('/orders/:orderId', orderController.patchOrders)
 
 router.get('/dashboard/:restaurantId', dashboardController.getEarningDetails)
 router.post('/logout', auth.logout)
+router.patch('/changePassword/:restaurantId', auth.updateCredentials)

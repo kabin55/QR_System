@@ -139,7 +139,7 @@ todayOrders.forEach((ord) => {
 // Convert map to array
 const todaySoldItems = Object.values(todayItemMap)
 
-console.log(`sales of 1 day ${todaySoldItems}`)
+// console.log(`sales of 1 day ${todaySoldItems}`)
 
     // ===== Current Month Revenue & Orders =====
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0)

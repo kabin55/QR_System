@@ -8,52 +8,58 @@ export default function SoldItemsTable({ items = [] }) {
     }),
     [items]
   )
-
+  
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+  <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow duration-300">
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200 text-sm">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
+              Name
+            </th>
+            <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">
+              Quantity
+            </th>
+            <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">
+              Price (Rs.)
+            </th>
+          </tr>
+        </thead>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b bold text-black-500">
-              <th className="py-3 text-left font-semibold">Name</th>
-              <th className="py-3 text-right font-semibold">Quantity</th>
-              <th className="py-3 text-right font-semibold">Price (Rs.)</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {items.map((i, idx) => (
-              <tr
-                key={idx}
-                className="border-b last:border-none hover:bg-gray-50 transition"
-              >
-                <td className="py-3 text-gray-700 font-semibold">
-                  {i.item}</td>
-                <td className="py-3 text-right font-semibold text-gray-700">
-                  {i.quantity}
-                </td>
-                <td className="py-3 text-right font-semibold text-gray-900">
-                  {i.price.toLocaleString()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-
-          <tfoot>
-            <tr className="border-t bg-gray-50 font-semibold">
-              <td className="py-3 text-gray-900">Total</td>
-              <td className="py-3 text-right text-gray-900">
-                {totals.qty}
+        <tbody className="bg-white divide-y divide-gray-200">
+          {items.map((i, idx) => (
+            <tr
+              key={idx}
+              className="hover:bg-gray-50 transition-colors duration-200"
+            >
+              <td className="px-4 py-3 font-medium text-gray-900">
+                {i.item}
               </td>
-              <td className="py-3 text-right text-gray-900">
-                Rs. {totals.price.toLocaleString()}
+              <td className="px-4 py-3 text-right text-gray-700">
+                {i.quantity}
+              </td>
+              <td className="px-4 py-3 text-right text-gray-900">
+                {i.price.toLocaleString()}
               </td>
             </tr>
-          </tfoot>
-        </table>
-      </div>
+          ))}
+        </tbody>
+
+        <tfoot className="bg-gray-50 font-semibold">
+          <tr>
+            <td className="px-4 py-3 text-gray-900">Total</td>
+            <td className="px-4 py-3 text-right text-gray-900">
+              {totals.qty}
+            </td>
+            <td className="px-4 py-3 text-right text-gray-900">
+              Rs. {totals.price.toLocaleString()}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
-  )
+  </div>
+)
+
 }

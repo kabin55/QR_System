@@ -12,13 +12,13 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "framer-motion": "^12.23.26",
-    "jspdf": "^3.0.4",
-    "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.562.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.11.0",
+    "jspdf": "^3.0.4",
+    "jspdf-autotable": "^5.0.2",
     "recharts": "^3.6.0",
     "socket.io-client": "^4.8.3",
     "xlsx": "^0.18.5"
