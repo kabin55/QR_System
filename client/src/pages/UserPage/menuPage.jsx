@@ -5,6 +5,8 @@ import { Search, Plus, Minus, ShoppingCart, X, MapPin, Star } from 'lucide-react
 
 import { fetchMenuByRestaurant, placeOrder } from '../../service/api';
 import { callWaiter } from '../../service/api';
+import { useToast } from  '../../utils/toastProvider'
+
 
 
 export default function QRMenuResponsive() {
@@ -20,6 +22,8 @@ export default function QRMenuResponsive() {
   const [tableId, setTableId] = useState('unknown');
 
   const navigate = useNavigate();
+  const { showToast } = useToast()
+
 
   useEffect(() => {
     const tableNumber = localStorage.getItem('tableNumber');
@@ -32,7 +36,7 @@ export default function QRMenuResponsive() {
 
     const loadMenu = async () => {
       try {
-        const data = await fetchMenuByRestaurant(restData.restaurantId);
+        const data = await fetchMenuByRestaurant(restData.restaurantId,showToast);
         const formattedMenu = data.map(d => ({
           id: d._id,
           name: d.item,

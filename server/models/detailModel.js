@@ -30,6 +30,7 @@ const detailSchema = new mongoose.Schema({
       default: 'password',
       type: String,
       required: true,
+      // select: false
     },
   },
   offer: {

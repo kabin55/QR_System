@@ -3,12 +3,15 @@ import { motion } from 'framer-motion'
 import toast, { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { validateRestaurant } from '../../service/api'
+import { useToast } from  '../../utils/toastProvider'
+
 
 
 export const LandingPage= () =>{
   const [restaurantId, setRestaurantId] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const { showToast } = useToast()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -20,7 +23,7 @@ export const LandingPage= () =>{
 
     setLoading(true)
     try {
-      const data = await validateRestaurant(restaurantId)
+      const data = await validateRestaurant(restaurantId,showToast)
 
       if (data.success) {
         toast.success(

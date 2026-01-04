@@ -1,48 +1,30 @@
-// Toast.jsx
-import React, { useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X } from 'lucide-react'
+// components/Toast.jsx
+import React, { useEffect } from 'react';
 
-export const Toast = ({ message, type = 'info', onClose, duration = 3000 }) => {
+export function Toast({ message, type, onClose }) {
   useEffect(() => {
-    if (!message) return
-    const timer = setTimeout(() => {
-      onClose?.()
-    }, duration)
-    return () => clearTimeout(timer)
-  }, [message, onClose, duration])
+    if (message) {
+      const timer = setTimeout(onClose, 3000); // auto close after 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
-  if (!message) return null
-
-  const typeStyles = {
-    success: 'bg-green-600 border-green-400 text-white',
-    error: 'bg-red-600 border-red-400 text-white',
-    info: 'bg-[#393f4d] border-[#d4d4dc] text-[#d4d4dc]',
-  }
+  if (!message) return null;
 
   return (
-    <AnimatePresence>
-      <motion.div
-        className="fixed left-1/2 -translate-x-1/2 top-6 sm:top-10 z-50"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.3 }}
-      >
-        <div
-          className={`flex items-center gap-2 px-4 py-2 rounded-full shadow-lg text-xs sm:text-sm border ${typeStyles[type]}`}
-          role="alert"
-        >
-          <span>{message}</span>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="ml-2 text-white hover:opacity-70 transition"
-          >
-            <X size={14} />
-          </button>
-        </div>
-      </motion.div>
-    </AnimatePresence>
-  )
+    <div
+      className={`fixed bottom-5 right-5 px-4 py-3 rounded shadow-md text-white ${
+        type === 'success'
+          ? 'bg-green-500'
+          : type === 'error'
+          ? 'bg-red-500'
+          : type === 'warning'
+          ? 'bg-yellow-500'
+          : 'bg-blue-500'
+      }`}
+    >
+      <span>{message}</span>
+      <button onClick={onClose} className="ml-3 font-bold">X</button>
+    </div>
+  );
 }

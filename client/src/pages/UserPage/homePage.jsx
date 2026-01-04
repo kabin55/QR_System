@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { validateRestaurant } from '../../service/api'
+import { useToast } from  '../../utils/toastProvider'
+
 
 export const HomePage = ()=>{
   const [tableNumber, setTableNumber] = useState('')
@@ -8,6 +10,7 @@ export const HomePage = ()=>{
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [message, setMessage] = useState('')
+  const { showToast } = useToast()
 
   const navigate = useNavigate()
   const { restaurantId } = useParams()
@@ -15,7 +18,7 @@ export const HomePage = ()=>{
   useEffect(() => {
     const loadRestaurant = async () => {
       try {
-        const data = await validateRestaurant(restaurantId)
+        const data = await validateRestaurant(restaurantId,showToast)
 
         if (data.success) {
           localStorage.setItem(

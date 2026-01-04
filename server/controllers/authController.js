@@ -5,12 +5,7 @@ import bcrypt from 'bcrypt'
 export const login = async (req, res) => {
   try {
     const { restaurantId, username, password } = req.body
-    // console.log(
-    //   'Login attempt with username:',
-    //   restaurantId,
-    //   username,
-    //   password
-    // )
+    
 
     //  Validate input
     if (!restaurantId || !username || !password) {
@@ -26,9 +21,7 @@ export const login = async (req, res) => {
     })
 
     if (!detail) {
-      // console.log(
-      //   ` Invalid login attempt for restaurantId=${restaurantId}, username=${username}`
-      // )
+      
       return res.status(401).json({ message: 'Invalid credentials' })
     }
 
@@ -73,3 +66,54 @@ export const logout = (req, res) => {
       .json({ message: 'Error during logout', error: error.message })
   }
 }
+
+export const updateCredentials = async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+    const { username, oldPassword, password: newPassword } = req.body;
+
+    // Validate input
+    if (!username || !oldPassword || !newPassword) {
+      return res
+        .status(400)
+        .json({ message: 'Username, old password, and new password are required' });
+    }
+
+    // Find restaurant with matching ID
+    const detail = await Detail.findOne(
+  { restaurantId },
+  {
+    'loginCredentials.username': 1,
+    'loginCredentials.password': 1,
+    _id: 0
+  }
+);
+
+
+    if (!detail) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+
+    const storedPassword = detail.loginCredentials.password;
+console.log(`From auth controller ${detail}`)
+    // Verify old password
+    const isMatch = await bcrypt.compare(oldPassword, storedPassword);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Current password is incorrect' });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update credentials
+    detail.loginCredentials.username = username;
+    detail.loginCredentials.password = hashedPassword;
+
+    await detail.save();
+
+    return res.status(200).json({ message: 'Username & password updated successfully' });
+  } catch (error) {
+    console.error('Error updating credentials:', error.message);
+    return res.status(500).json({ message: 'Error updating credentials', error: error.message });
+  }
+};
